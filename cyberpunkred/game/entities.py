@@ -24,8 +24,8 @@ class Character(ABC):
         self.hp_current: int = self.max_hp
         self.max_humanity: int = 10 * self.EMP
         self.humanity_current: int = self.max_humanity 
-        self.injuries: List[str] = []
-        self.is_dying: bool = False
+        self.injuries: List[str] = [] # Is only used when is program running
+        self.is_dying: bool = False #instance related
 
         # 4. GEAR & SKILLS
         self.skills: Dict[str, int] = {}
@@ -121,3 +121,110 @@ class Character(ABC):
         weapon: {weapon_info}
         SP: {self.BODY * 2}
         """
+character_database = {
+    "v": {
+        "name": "V",
+        "core_stats": {
+            "INT": 6,
+            "WILL": 5,
+            "COOL": 7,
+            "EMP": 4,
+            "TECH": 6,
+            "REF": 8,
+            "DEX": 7,
+            "BODY": 6,
+            "MOVE": 7
+        },
+        "skills": {
+            "handgun": 6,
+            "brawling": 4,
+            "rifles": 5
+        },
+        "equipped_weapon": None,
+        "equipped_armor": {
+            "head": None,
+            "torso": None,
+            "arms": None,
+            "legs": None
+        },
+        "inventory": []
+    },
+    "jackie": {
+        "name": "Jackie Welles",
+        "core_stats": {
+            "INT": 5,
+            "WILL": 4,
+            "COOL": 6,
+            "EMP": 5,
+            "TECH": 4,
+            "REF": 7,
+            "DEX": 6,
+            "BODY": 7,
+            "MOVE": 6
+        },
+        "skills": {
+            "brawling": 7,
+            "melee": 5,
+            "handgun": 4
+        },
+        "equipped_weapon": None,
+        "equipped_armor": {
+            "head": None,
+            "torso": None,
+            "arms": None,
+            "legs": None
+        },
+    },
+    "arasaka_soldier": {
+        "name": "Arasaka Soldier",
+        "core_stats": {
+            "INT": 4,
+            "WILL": 5,
+            "COOL": 5,
+            "EMP": 3,
+            "TECH": 4,
+            "REF": 6,
+            "DEX": 5,
+            "BODY": 6,
+            "MOVE": 5
+        },
+        "skills": {
+            "rifles": 6,
+            "handgun": 5,
+            "brawling": 3
+        },
+        "equipped_weapon": None,
+        "equipped_armor": {
+            "head": None,
+            "torso": None,
+            "arms": None,
+            "legs": None
+        },
+    },
+    "adam_smasher": {
+        "name": "Adam Smasher",
+        "core_stats": {
+            "INT": 6,
+            "WILL": 6,
+            "COOL": 7,
+            "EMP": 1,
+            "TECH": 7,
+            "REF": 9,
+            "DEX": 8,
+            "BODY": 9,
+            "MOVE": 7
+        },
+        "skills": {
+            "rifles": 8,
+            "handgun": 7,
+            "brawling": 6
+        },
+        "equipped_weapon": None,
+        "equipped_armor": {
+            "head": None,
+            "torso": None,
+            "arms": None,
+            "legs": None
+        },
+    },
+}
