@@ -77,16 +77,17 @@ weapon_database = { #Having it global is supposedly bad practice
 cyberware_database = {
     "body": {
         "sandevistan_mk4": {
+            # Time Dilation - Slow time perception for enhanced reflexes.
             "name": "Arasaka Sandevistan MK4",
             "itemid": "CYB-B-001",
-            "category": "Pistol",
+            "category": "Bodycyberware",
             "equipable": True,
-            "damage": "2d6",
+            "humanity_loss": 4,
             "cost": 20000,           # Must be integer
-            "weight": 25.0,
-            "rarity": "Common",
+            "weight": 15.0,
+            "rarity": "Uncommon",
             "sp_ignore": 0,
-            "abilities": [],
+            "abilities": []
         }
     }
 }

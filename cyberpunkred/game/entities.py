@@ -47,7 +47,8 @@ class Character(ABC):
     @abstractmethod    
     def attack(self):
         #zkontroluje range od nepřítele
-        total_attack = 1
+        total_attack = 20 #logika celého programu dodělat --------
+        return total_attack
     
     @abstractmethod
     def check_range(self):
@@ -71,7 +72,7 @@ class Character(ABC):
 
 #-------------------------------------- General Information ---------------------------------------
     def __str__ (self):
-        weapon_info = str(self.weapon) if self.weapon else "None"
+        weapon_info = str(self.equipped_weapon) if self.equipped_weapon else "None"
         return f"""
         {self.name}
         class: {(type(self).__name__)}
