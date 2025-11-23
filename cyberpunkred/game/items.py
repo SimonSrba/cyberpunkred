@@ -18,7 +18,7 @@ class Item(ABC):
         pass
 
 class Weapon(Item):
-    def __init__(self, name: str, itemid: int,category: str, atribute: str, cost: str, equipable: bool, damage: str, weight: float, is_equipped:bool, sp_ignore):
+    def __init__(self, name: str, itemid: int,category: str, atribute: str, cost: int, equipable: bool, damage: str, weight: float, is_equipped:bool, sp_ignore):
         super().__init__(name, itemid, category, atribute, cost, equipable, weight)
         self.damage = damage # e.g. "2d6", "5d6"
         self.abilities = []
@@ -32,8 +32,8 @@ class Weapon(Item):
     
 
 class Cyberware(Item):
-  def __init__(self, name: str, itemid, category: str, cost: int, equipable, humanity_loss, slot: str, weight: float = 0.0):
-        super().__init__(name, itemid, category, cost, equipable, weight)
+    def __init__(self, name: str, itemid, category: str, atribute: str, cost: int, equipable, humanity_loss, slot: str, weight: float = 0.0):
+        super().__init__(name, itemid, category, atribute, cost, equipable, weight)
         self.humanity_loss = humanity_loss 
         self.slot = slot # Body location/system (e.g. 'Neuralware', 'Cyberarm', 'Skin')
         self.is_installed = False

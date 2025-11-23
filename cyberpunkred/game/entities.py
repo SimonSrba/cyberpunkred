@@ -31,19 +31,60 @@ class Character(ABC):
         self.skills: Dict[str, int] = {}
         self.equipped_weapon: Any = None
         self.equipped_armor: Dict[str, Any] = {}
-    '''
-    @abstractmethod    
-    def hit_to_roll(self):
-        get equiped weapon category
-        if equipped weapon == "range"
-        - get bonus DV from weapon if it is range (different guns have different DV points)
-        - DV = enemy.DV + range_DV_bonus
-        
-        check = random.randint(1, 10) + required atribute(check from weapons) + Skill(for the type of weapon)
 
-        return 1
+    def hit_to_roll(self, enemy_dv: int, distance: int = 0) -> Dict[str, Any]:
+        if not self.equipped_weapon:
+            # Unarmed default: use BODY and brawling skill
+            weapon_category = "unarmed"
+            required_attr_name = "BODY"
+            range_dv_bonus = 0
+        else:
+            w = self.equipped_weapon
+            # support both dict-style database entries and Weapon objects
+            if isinstance(w, dict):
+                weapon_category = w.get('category', 'unknown')
+                required_attr_name = w.get('atribute', 'DEX')
+                # some weapons may define a DV/range penalty as 'dv' or 'dv_bonus'
+                range_dv_bonus = w.get('dv', w.get('dv_bonus', 0))
+            else:
+                weapon_category = getattr(w, 'category', 'unknown')
+                required_attr_name = getattr(w, 'atribute', 'DEX')
+                range_dv_bonus = getattr(w, 'dv', getattr(w, 'dv_bonus', 0))
 
-    '''
+        # read attribute value from character (default 0 if missing)
+        attribute_value = getattr(self, required_attr_name, 0)
+
+        # determine skill value: try direct category key, then common mappings
+        cat_key = weapon_category.lower() if isinstance(weapon_category, str) else str(weapon_category)
+        skill_value = 0
+        # direct lookup
+        skill_value = self.skills.get(cat_key, 0)
+        if not skill_value:
+            # some simple mappings for common weapon categories
+            if 'pistol' in cat_key or 'ranged' in cat_key:
+                skill_value = self.skills.get('handgun', 0)
+            elif 'brawl' in cat_key or 'melee' in cat_key:
+                skill_value = self.skills.get('brawling', 0)
+
+        # For ranged weapons, optionally adjust target DV by range-based bonus
+        total_target_dv = enemy_dv + (range_dv_bonus if distance > 0 else 0)
+
+        die = random.randint(1, 10)
+        total = die + attribute_value + skill_value
+
+        result = {
+            'die': die,
+            'attribute': required_attr_name,
+            'attribute_value': attribute_value,
+            'skill_key': cat_key,
+            'skill_value': skill_value,
+            'total': total,
+            'target_dv': total_target_dv,
+            'success': total >= total_target_dv,
+        }
+
+        return result
+ 
     @abstractmethod    
     def attack(self):
         #zkontroluje range od nepřítele
@@ -76,8 +117,7 @@ class Character(ABC):
         return f"""
         {self.name}
         class: {(type(self).__name__)}
-        hp: {self.hp}/{self.max_hp}
+        hp: {self.hp_current}/{self.max_hp}
         weapon: {weapon_info}
-        SP: {self.defense}
+        SP: {self.BODY * 2}
         """
-
