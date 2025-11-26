@@ -30,15 +30,6 @@ class Weapon(Item):
         """Prints out the item's key statistics."""
         pass
     
-
-class Cyberware(Item):
-    def __init__(self, name: str, itemid, category: str, atribute: str, cost: int, equipable, humanity_loss, slot: str, weight: float = 0.0):
-        super().__init__(name, itemid, category, atribute, cost, equipable, weight)
-        self.humanity_loss = humanity_loss 
-        self.slot = slot # Body location/system (e.g. 'Neuralware', 'Cyberarm', 'Skin')
-        self.is_installed = False
-     
-
 weapon_database = { #Having it global is supposedly bad practice
     "ranged": {
         "pistol": {
@@ -73,6 +64,29 @@ weapon_database = { #Having it global is supposedly bad practice
         }
     }
 }
+    
+
+ranged_DV_table = {
+    "pistol": [13, 15, 20, 25, 30, 30, 99, 99],
+    "smg": [15, 13, 15, 20, 25, 25, 30, 99],
+    "shotgun_auto": [20, 15, 20, 25, 30, 99, 99, 99],
+    "shotgun_shell": [13, 15, 20, 25, 99, 35, 99, 99],
+    "assault_rifle": [13, 99, 15, 15, 15, 20, 25, 30],
+    "assault_rifle_auto": [17, 16, 17, 20, 25, 20, 30, 99],
+    "sniper_rifle": [22, 20, 17, 15, 15, 16, 17, 20],
+    "crossbow_bow": [30, 25, 20, 20, 20, 22, 99, 99],
+    "grenade_launcher": [15, 13, 15, 17, 20, 22, 25, 99],
+    "rocket_launcher": [16, 15, 15, 99, 20, 22, 25, 99],
+    "thrown_by_hand": [16, 15, 15, 99, 99, 99, 99, 99],
+}
+
+
+class Cyberware(Item):
+    def __init__(self, name: str, itemid, category: str, atribute: str, cost: int, equipable, humanity_loss, slot: str, weight: float = 0.0):
+        super().__init__(name, itemid, category, atribute, cost, equipable, weight)
+        self.humanity_loss = humanity_loss 
+        self.slot = slot # Body location/system (e.g. 'Neuralware', 'Cyberarm', 'Skin')
+        self.is_installed = False
 
 cyberware_database = {
     "body": {

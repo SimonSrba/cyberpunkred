@@ -31,64 +31,25 @@ class Character(ABC):
         self.skills: Dict[str, int] = {}
         self.equipped_weapon: Any = None
         self.equipped_armor: Dict[str, Any] = {}
-
-    def hit_to_roll(self, enemy_dv: int, distance: int = 0) -> Dict[str, Any]:
-        if not self.equipped_weapon:
-            weapon_category = "unarmed"
-            required_attr_name = "BODY"
-            range_dv_bonus = 0
-        else:
-            w = self.equipped_weapon
-            if isinstance(w, dict):
-                weapon_category = w.get('category', 'unknown')
-                required_attr_name = w.get('atribute', 'DEX')
-                range_dv_bonus = w.get('dv', w.get('dv_bonus', 0))
-            else:
-                weapon_category = getattr(w, 'category', 'unknown')
-                required_attr_name = getattr(w, 'atribute', 'DEX')
-                range_dv_bonus = getattr(w, 'dv', getattr(w, 'dv_bonus', 0))
-        attribute_value = getattr(self, required_attr_name, 0)
-        cat_key = weapon_category.lower() if isinstance(weapon_category, str) else str(weapon_category)
-        skill_value = 0
-        skill_value = self.skills.get(cat_key, 0)
-        if not skill_value:
-            if 'pistol' in cat_key or 'ranged' in cat_key:
-                skill_value = self.skills.get('handgun', 0)
-            elif 'brawl' in cat_key or 'melee' in cat_key:
-                skill_value = self.skills.get('brawling', 0)
-        total_target_dv = enemy_dv + (range_dv_bonus if distance > 0 else 0)
-        die = random.randint(1, 10)
-        total = die + attribute_value + skill_value
-        result = {
-            'die': die,
-            'attribute': required_attr_name,
-            'attribute_value': attribute_value,
-            'skill_key': cat_key,
-            'skill_value': skill_value,
-            'total': total,
-            'target_dv': total_target_dv,
-            'success': total >= total_target_dv,
-        }
-
-        return result
- 
-    @abstractmethod    
-    def attack(self):
-        #zkontroluje range od nepřítele
-        total_attack = 20 #logika celého programu dodělat --------
-        return total_attack
     
     @abstractmethod
     def check_range(self):
-        #checkne range od nepřítele a vrátí jestli je nepřítel v dosahu equipped zbraně
-        range = 1
-        return range
+        ranges_all = [] #Dodělat logiku programu
+        return ranges_all 
     
     @abstractmethod
     def update_range(self):
         #updatene range
         newrange = 1 #logika celého programu dodělat --------
         return newrange
+
+    def hit_to_roll(self) -> Dict[str, Any]:
+        success = 0 #dodělat logiku programu
+        return success
+    @abstractmethod    
+    def attack(self):
+        attack = 20 #logika celého programu dodělat --------
+        return attack
     
     #-------------------------------------- Getters a Setters ---------------------------------------
 
