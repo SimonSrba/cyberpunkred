@@ -1,7 +1,7 @@
 import random
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 
-class Item(ABC):
+class Item:
     def __init__(self, name: str, itemid, category: str, atribute: str, cost: int, equipable, weight: float = 0.0):
         self.name = name
         self.itemid = itemid
@@ -12,7 +12,7 @@ class Item(ABC):
         self.weight = weight
         self.abilities = []
         
-    @abstractmethod
+
     def display_details(self):
         """Prints out the item's key statistics."""
         pass
@@ -25,7 +25,7 @@ class Weapon(Item):
         self.is_equipped = is_equipped
         self.sp_ignore = sp_ignore
 
-    @abstractmethod
+
     def display_details(self):
         """Prints out the item's key statistics."""
         pass
@@ -64,21 +64,6 @@ weapon_database = { #Having it global is supposedly bad practice
         }
     }
 }
-    
-
-ranged_DV_table = {
-    "pistol": [13, 15, 20, 25, 30, 30, 99, 99],
-    "smg": [15, 13, 15, 20, 25, 25, 30, 99],
-    "shotgun_auto": [20, 15, 20, 25, 30, 99, 99, 99],
-    "shotgun_shell": [13, 15, 20, 25, 99, 35, 99, 99],
-    "assault_rifle": [13, 99, 15, 15, 15, 20, 25, 30],
-    "assault_rifle_auto": [17, 16, 17, 20, 25, 20, 30, 99],
-    "sniper_rifle": [22, 20, 17, 15, 15, 16, 17, 20],
-    "crossbow_bow": [30, 25, 20, 20, 20, 22, 99, 99],
-    "grenade_launcher": [15, 13, 15, 17, 20, 22, 25, 99],
-    "rocket_launcher": [16, 15, 15, 99, 20, 22, 25, 99],
-    "thrown_by_hand": [16, 15, 15, 99, 99, 99, 99, 99],
-}
 
 
 class Cyberware(Item):
@@ -105,3 +90,36 @@ cyberware_database = {
         }
     }
 }
+ranged_DV_table = {
+    "pistol": [13, 15, 20, 25, 30, 30, 99, 99],
+    "smg": [15, 13, 15, 20, 25, 25, 30, 99],
+    "shotgun_auto": [20, 15, 20, 25, 30, 99, 99, 99],
+    "shotgun_shell": [13, 15, 20, 25, 99, 35, 99, 99],
+    "assault_rifle": [13, 99, 15, 15, 15, 20, 25, 30],
+    "assault_rifle_auto": [17, 16, 17, 20, 25, 20, 30, 99],
+    "sniper_rifle": [22, 20, 17, 15, 15, 16, 17, 20],
+    "crossbow_bow": [30, 25, 20, 20, 20, 22, 99, 99],
+    "grenade_launcher": [15, 13, 15, 17, 20, 22, 25, 99],
+    "rocket_launcher": [16, 15, 15, 99, 20, 22, 25, 99],
+    "thrown_by_hand": [16, 15, 15, 99, 99, 99, 99, 99],
+}
+
+
+def create_item_from_db(category_key: str, item_key: str):
+    """Factory function to create Item objects from the database."""
+    if category_key in weapon_database and item_key in weapon_database[category_key]:
+        data = weapon_database[category_key][item_key]
+        return Weapon(
+            name=data["name"],
+            itemid=data["itemid"],
+            category=data["category"],
+            atribute=data["atribute"],
+            cost=data["cost"],
+            equipable=data["equipable"],
+            damage=data["damage"],
+            weight=data["weight"],
+            is_equipped=False,
+            sp_ignore=data.get("sp_ignore", 0)
+        )
+    # Expansion for cyberware or other items can go here
+    return None

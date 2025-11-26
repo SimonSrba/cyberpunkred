@@ -32,26 +32,7 @@ class Character(ABC):
         self.equipped_weapon: Any = None
         self.equipped_armor: Dict[str, Any] = {}
     
-    @abstractmethod
-    def check_range(self):
-        ranges_all = [] #Dodělat logiku programu
-        return ranges_all 
-    
-    @abstractmethod
-    def update_range(self):
-        #updatene range
-        newrange = 1 #logika celého programu dodělat --------
-        return newrange
-
-    def hit_to_roll(self) -> Dict[str, Any]:
-        success = 0 #dodělat logiku programu
-        return success
-    @abstractmethod    
-    def attack(self):
-        attack = 20 #logika celého programu dodělat --------
-        return attack
-    
-    #-------------------------------------- Getters a Setters ---------------------------------------
+#-------------------------------------- Getters a Setters ---------------------------------------
 
     def get_name(self):
         return self.name
@@ -176,3 +157,70 @@ character_database = {
         },
     },
 }
+# 1. Create a Concrete Class so we can instantiate "V" or "Arasaka Soldier"
+class Actor(Character):
+    def attack(self):
+        pass # We will handle attack logic in the BattleSystem or here
+    
+    def check_range(self):
+        pass 
+        
+    def update_range(self):
+        pass
+        
+    def display_details(self):
+        print(self.__str__())
+
+    def hit_to_roll(self, enemy_dv: int, distance: int):
+        """Simple hit roll helper used by the battle system.
+
+        Returns a dict containing the total and breakdown so callers
+        (e.g. `Battlefield.resolve_attack`) can inspect the roll.
+        """
+        # Choose stat based on equipped weapon attribute (e.g., 'REF' or 'BODY')
+        stat_value = None
+        skill_value = 0
+
+        if self.equipped_weapon:
+            # Weapon DB uses key 'atribute' (note the spelling)
+            attr_name = getattr(self.equipped_weapon, 'atribute', None)
+            if attr_name and hasattr(self, attr_name):
+                stat_value = getattr(self, attr_name)
+
+            # Pick a reasonable skill for the equipped weapon
+            for candidate in ('handgun', 'rifles', 'brawling', 'melee'):
+                if candidate in self.skills:
+                    skill_value = self.skills.get(candidate, 0)
+                    break
+
+        # Fallbacks
+        if stat_value is None:
+            stat_value = getattr(self, 'REF', 0)
+
+        # d10 roll
+        roll = random.randint(1, 10)
+        total = stat_value + skill_value + roll
+
+        return {
+            'total': total,
+            'roll': roll,
+            'stat': stat_value,
+            'skill': skill_value,
+        }
+
+# 2. Factory to load Character
+def create_actor_from_db(key: str) -> Actor:
+    if key not in character_database:
+        return None
+    
+    data = character_database[key]
+    # Create the Actor
+    actor = Actor(data["name"], data["core_stats"])
+    
+    # Load Skills
+    actor.skills = data["skills"]
+    
+    # Simple logic to auto-equip the first valid weapon found in a "default loadout"
+    # For now, we leave them unarmed until Setup assigns gear, 
+    # OR you can map specific starting gear in the DB.
+    return actor
