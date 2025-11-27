@@ -4,7 +4,6 @@ from entities import Actor
 
 class Battlefield:
     def __init__(self):
-        # Maps an Actor instance to a position (integer meters)
         self.positions: Dict[Actor, int] = {}
         self.enemies: List[Actor] = []
         self.allies: List[Actor] = []
@@ -31,9 +30,8 @@ class Battlefield:
 
     def get_target_dv(self, distance: int, weapon_category: str) -> int:
         """Helper to get Difficulty Value (DV) based on range."""
-        # Simplified Cyberpunk Red DV Table
         if weapon_category == "melee" or weapon_category == "brawling":
-            return -1 # Special case for contested roll
+            return -1
             
         # Ranged DVs
         if distance <= 6: return 13

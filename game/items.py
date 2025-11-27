@@ -42,7 +42,20 @@ weapon_database = { #Having it global is supposedly bad practice
             "cost": 500,           # Must be integer
             "weight": 1.0,
             "rarity": "Common",
-            "sp_ignore": 0,
+            "sp_ignore": 2,
+            "abilities": [],
+        },
+        "ar15": {
+            "name": "AR-15",
+            "itemid": "WPN-R-002",  # Should be string for uniqueness/SKU format
+            "category": "assault_rifle",
+            "atribute": "REF",
+            "equipable": True,
+            "damage": "3d6",
+            "cost": 2500,           # Must be integer
+            "weight": 10.0,
+            "rarity": "Uncommon",
+            "sp_ignore": 2,
             "abilities": [],
         }
     },
@@ -65,7 +78,54 @@ weapon_database = { #Having it global is supposedly bad practice
     }
 }
 
+def ranged_DV_i(distance):
+    if distance <= 6: return 0
+    elif distance <= 12: return 1
+    elif distance <= 25: return 2
+    elif distance <= 50: return 3
+    elif distance <= 100: return 4
+    elif distance <= 200: return 5
+    elif distance <= 400: return 6
+    elif distance <= 800: return 7
+    else: return 7
 
+ranged_DV_table = {
+    "pistol": [13, 15, 20, 25, 30, 30, 99, 99],
+    "smg": [15, 13, 15, 20, 25, 25, 30, 99],
+    "shotgun_auto": [20, 15, 20, 25, 30, 99, 99, 99],
+    "shotgun_shell": [13, 15, 20, 25, 99, 35, 99, 99],
+    "assault_rifle": [13, 13, 15, 15, 15, 20, 25, 30],
+    "assault_rifle_auto": [17, 16, 17, 20, 25, 20, 30, 99],
+    "sniper_rifle": [22, 20, 17, 15, 15, 16, 17, 20],
+    "crossbow_bow": [30, 25, 20, 20, 20, 22, 99, 99],
+    "grenade_launcher": [15, 13, 15, 17, 20, 22, 25, 99],
+    "rocket_launcher": [16, 15, 15, 99, 20, 22, 25, 99],
+    "thrown_by_hand": [16, 15, 15, 99, 99, 99, 99, 99],
+}
+
+def create_item_from_db(category_key: str, item_key: str):
+    """Factory function to create Item objects from the database."""
+    if category_key in weapon_database and item_key in weapon_database[category_key]:
+        data = weapon_database[category_key][item_key]
+        return Weapon(
+            name=data["name"],
+            itemid=data["itemid"],
+            category=data["category"],
+            atribute=data["atribute"],
+            cost=data["cost"],
+            equipable=data["equipable"],
+            damage=data["damage"],
+            weight=data["weight"],
+            is_equipped=False,
+            sp_ignore=data.get("sp_ignore", 0)
+        )
+    # Expansion for cyberware or other items can go here
+    return None
+
+
+
+#Ignore that, this code is meant for future implementation - Cyberware expansion is expected in v1.0.0
+"""
 class Cyberware(Item):
     def __init__(self, name: str, itemid, category: str, atribute: str, cost: int, equipable, humanity_loss, slot: str, weight: float = 0.0):
         super().__init__(name, itemid, category, atribute, cost, equipable, weight)
@@ -90,36 +150,4 @@ cyberware_database = {
         }
     }
 }
-ranged_DV_table = {
-    "pistol": [13, 15, 20, 25, 30, 30, 99, 99],
-    "smg": [15, 13, 15, 20, 25, 25, 30, 99],
-    "shotgun_auto": [20, 15, 20, 25, 30, 99, 99, 99],
-    "shotgun_shell": [13, 15, 20, 25, 99, 35, 99, 99],
-    "assault_rifle": [13, 99, 15, 15, 15, 20, 25, 30],
-    "assault_rifle_auto": [17, 16, 17, 20, 25, 20, 30, 99],
-    "sniper_rifle": [22, 20, 17, 15, 15, 16, 17, 20],
-    "crossbow_bow": [30, 25, 20, 20, 20, 22, 99, 99],
-    "grenade_launcher": [15, 13, 15, 17, 20, 22, 25, 99],
-    "rocket_launcher": [16, 15, 15, 99, 20, 22, 25, 99],
-    "thrown_by_hand": [16, 15, 15, 99, 99, 99, 99, 99],
-}
-
-
-def create_item_from_db(category_key: str, item_key: str):
-    """Factory function to create Item objects from the database."""
-    if category_key in weapon_database and item_key in weapon_database[category_key]:
-        data = weapon_database[category_key][item_key]
-        return Weapon(
-            name=data["name"],
-            itemid=data["itemid"],
-            category=data["category"],
-            atribute=data["atribute"],
-            cost=data["cost"],
-            equipable=data["equipable"],
-            damage=data["damage"],
-            weight=data["weight"],
-            is_equipped=False,
-            sp_ignore=data.get("sp_ignore", 0)
-        )
-    # Expansion for cyberware or other items can go here
-    return None
+"""

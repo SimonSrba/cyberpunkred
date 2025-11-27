@@ -62,7 +62,7 @@ character_database = {
             "REF": 8,
             "DEX": 7,
             "BODY": 6,
-            "MOVE": 7
+            "MOVE": 5
         },
         "skills": {
             "handgun": 6,
@@ -89,7 +89,7 @@ character_database = {
             "REF": 7,
             "DEX": 6,
             "BODY": 7,
-            "MOVE": 6
+            "MOVE": 5
         },
         "skills": {
             "brawling": 7,
@@ -157,6 +157,7 @@ character_database = {
         },
     },
 }
+
 # 1. Create a Concrete Class so we can instantiate "V" or "Arasaka Soldier"
 class Actor(Character):
     def attack(self):

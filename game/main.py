@@ -80,6 +80,7 @@ def game_loop(bf: Battlefield):
         # In a real game, you would sort by Initiative (REF + d10)
         all_actors = bf.allies + bf.enemies
         
+        # 
         for actor in all_actors:
             if actor.hp_current <= 0: continue # Skip dead
             
@@ -87,17 +88,20 @@ def game_loop(bf: Battlefield):
             
             # Simple AI / Player check
             if actor in bf.allies:
-                action = input("Action? (m)ove / (a)ttack / (p)ass: ").lower()
+                action = input(f"Action? (m)ove (max: {actor.MOVE * 6}) / (a)ttack / (p)ass: ").lower()
             else:
-                # Basic AI: Always attacks if possible
+                # Always attacks if possible
                 action = 'a'
                 print("Enemy is attacking!")
 
-            if action == 'm':
-                move = int(input("Move how many meters? (negative to go back): "))
-                bf.update_position(actor, move)
+            if action == 'm': 
+                move = int(input("Move how many meters? (negative to go back): ")) # Make logic inside update position
+                if move <= actor.MOVE * 6 and move >= -actor.MOVE * 6: #simplified - but would be deducted from move attribute
+                    bf.update_position(actor, move)
+                else:
+                    print("You aren't that fast brah.")
                 
-            elif action == 'a':
+            elif action == 'a': #Make function out of that again
                 # Find closest enemy
                 targets = bf.enemies if actor in bf.allies else bf.allies
                 valid_targets = [t for t in targets if t.hp_current > 0]
